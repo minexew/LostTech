@@ -1,0 +1,191 @@
+
+a:link {
+	color: blue;
+	/*background-color: white;*/
+}
+
+a:visited {
+	color: purple;
+	/*background-color: white;*/
+}
+
+a.section, a.subsection {
+	font-family: Verdana, sans-serif;
+	font-weight: bolder;
+	
+	color: white;
+	background-color: #0000aa;
+}
+
+a.section:visited, a.subsection:visited {
+	color: white;
+	background-color: #0000aa;
+}
+
+a.subsection {font-size: smaller;}
+
+body {
+	overflow: hidden;
+	
+	margin: 0px;
+	padding: 0px;
+	
+	font-size: medium;
+	
+	color: black;
+	background-color: silver;
+}
+
+dfn {font-style: italic;}
+
+div.codeBox, div.noteBox {
+	margin-top: 1ex;
+	margin-bottom: 2ex;
+	padding: 5px;
+	
+	border-color: black;
+	border-style: solid;
+	border-width: thin;
+	
+	color: black;
+}
+
+div.codeBox {
+	/*white-space: pre;*/
+	
+	font-family: "Courier New", monospace;
+	font-size: 10pt;
+	
+	background-color: #dddddd;
+}
+
+div.mainContent {
+	position: absolute;
+	overflow: auto;
+	
+	left: 245px;
+	right: 0px;
+	top: 0px;
+	
+	height: 100%;
+	
+	margin: 0px;
+	padding: 0px;
+	
+	color: black;
+	background-color: white;
+}
+
+div.mainContentPadder {padding: 12px 36px 12px 12px;}
+
+div.noteBox {background-color: #ffffbb;}
+
+div.sidebar {
+	position: absolute;
+	overflow: auto;
+	
+	left: 0px;
+	top: 0px;
+	
+	width: 245px;
+	height: 100%;
+	
+	margin: 0px;
+	padding: 0px;
+	
+	color: white;
+	background-color: #0000aa;
+}
+
+div.sidebarPadder {padding: 12px;}
+
+h1 { /* Section heading. */
+	margin-top: 2ex;
+	margin-bottom: 1ex;
+	
+	font-family: Verdana, sans-serif;
+	font-size: x-large;
+	font-weight: bold;
+}
+
+h2 { /* Subsection heading. */
+	margin-top: 1ex;
+	margin-bottom: 0.5ex;
+	
+	font-family: Verdana, sans-serif;
+	font-size: large;
+	font-weight: bold;
+}
+
+h3 { /* List item heading. */
+	margin-top: 1ex;
+	margin-bottom: 0ex;
+	
+	font-family: Verdana, sans-serif;
+	font-size: medium;
+	font-weight: bold;
+}
+
+li {
+	margin-left: 0px;
+	padding-left: 0px;
+}
+
+li.sidebar {margin-bottom: 1ex;}
+
+p {
+	margin-top: 0px;
+	margin-bottom: 2ex;
+}
+
+p.caption {
+	margin-top: 0.5ex;
+	
+	font-family: Verdana, sans-serif;
+	font-size: small;
+}
+
+p.image {margin-bottom: 0.5ex;}
+
+p.sidebar {margin-bottom: 0ex;}
+
+span.capH {font-weight: bold;}
+
+table {
+	border-color: black;
+	border-style: solid;
+	border-width: 1px;
+}
+
+td, th {
+	padding: 4px;
+	
+	border-color: black;
+	border-style: solid;
+	border-width: 1px;
+}
+
+ul {
+	margin-left: 0px;
+	padding-left: 0px;
+	
+	list-style-type: none;
+}
+
+ul.bullets {
+	margin-left: 0px;
+	padding-left: 4ex;
+	
+	list-style-type: disc;
+}
+
+ul.sublist {
+	margin-left: 0px;
+	padding-left: 4ex;
+}
+
+var {
+	font-family: "Courier New", monospace;
+	font-style: normal;
+	font-weight: bold;
+}

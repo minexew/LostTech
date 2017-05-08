@@ -1,0 +1,5 @@
+LIBRARY LostTech
+DESCRIPTION "The VST plug-in Lost Technology"
+EXPORTS
+main=main_gcc @1
+main_gcc @2
