@@ -77,12 +77,12 @@ private:
 public:
 	WavePlugEditor(AudioEffect *effect);
 	
-	virtual long open(void *ptr);
-	virtual void close();
-	virtual void idle();
+	virtual bool open(void *ptr) override;
+	virtual void close() override;
+	virtual void idle() override;
 	
-	virtual void setParameter(long index, float value);
-	virtual void valueChanged(CDrawContext* context, CControl* control);
+	virtual void setParameter(VstInt32 index, float value) override;
+	virtual void valueChanged(CDrawContext* context, CControl* control) override;
 	
 private:
 	void initKnob(int tag, CBitmap *knobBitmap, CBitmap *handleBitmap, CBitmap *lockBitmap);

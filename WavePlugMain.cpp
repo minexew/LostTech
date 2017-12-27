@@ -37,7 +37,7 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE hInst, DWORD dwReason, LPVOID lpvReserv
 	return 1;
 }
 
-extern "C" AEffect *main_gcc(audioMasterCallback audioMaster) {
+extern "C" AEffect *VSTPluginMain(audioMasterCallback audioMaster) {
 	// Check VST version.
 	if (!audioMaster(NULL, audioMasterVersion, 0, 0, NULL, 0))
 		return NULL;  // Old version.

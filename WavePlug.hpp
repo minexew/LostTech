@@ -148,33 +148,33 @@ public: // public methods
 	virtual ~WavePlug();
 	
 	// Plug info.
-	virtual bool getEffectName(char* name);
-	virtual bool getVendorString(char* text);
-	virtual bool getProductString(char* text);
-	virtual long getVendorVersion();
-	virtual VstPlugCategory getPlugCategory();
-	virtual long canDo(char *text);
+	virtual bool getEffectName(char* name) override;
+	virtual bool getVendorString(char* text) override;
+	virtual bool getProductString(char* text) override;
+	virtual VstInt32 getVendorVersion() override;
+	virtual VstPlugCategory getPlugCategory() override;
+	virtual VstInt32 canDo(char *text) override;
 	
 	// Programs.
-	virtual void setProgram(long program);
-	virtual void setProgramName(char *name);
-	virtual void getProgramName(char *name);
-	virtual bool getProgramNameIndexed(long category, long index, char *text);
+	virtual void setProgram(VstInt32 program) override;
+	virtual void setProgramName(char *name) override;
+	virtual void getProgramName(char *name) override;
+	virtual bool getProgramNameIndexed(VstInt32 category, VstInt32 index, char *text) override;
 	
 	// Parameters.
-	virtual void setParameter(long index, float value);
-	virtual float getParameter(long index);
-	virtual void getParameterDisplay(long index, char *text);
-	virtual void getParameterName(long index, char *text);
-	virtual void getParameterLabel(long index, char *label);
+	virtual void setParameter(VstInt32 index, float value) override;
+	virtual float getParameter(VstInt32 index) override;
+	virtual void getParameterDisplay(VstInt32 index, char *text) override;
+	virtual void getParameterName(VstInt32 index, char *text) override;
+	virtual void getParameterLabel(VstInt32 index, char *label) override;
 	
 	// Processing.
-	virtual void setSampleRate(float sampleRate);
-	virtual bool setBypass(bool onOff);
-	virtual void suspend();
-	virtual void resume();
-	virtual void process(float **inputs, float **outputs, long sampleFrames);
-	virtual void processReplacing(float **inputs, float **outputs, long sampleFrames);
+	virtual void setSampleRate(float sampleRate) override;
+	virtual bool setBypass(bool onOff) override;
+	virtual void suspend() override;
+	virtual void resume() override;
+	//virtual void process(float **inputs, float **outputs, VstInt32 sampleFrames) override;
+	virtual void processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) override;
 	
 	// Custom.
 	const char *getVersionString() {return WP_VERSION_STRING(WP_MAJOR, WP_MINOR, WP_UPDATE);}

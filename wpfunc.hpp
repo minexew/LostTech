@@ -21,11 +21,8 @@ DEALINGS IN THE SOFTWARE.
 #ifndef WP_WPFUNC_HPP
 #define WP_WPFUNC_HPP
 
+#include <algorithm>
 #include <cmath>
-
-#ifndef NULL
-#define NULL (0)
-#endif
 
 #define WP_STD_SAMPLE_RATE (44100.0f)
 
@@ -35,11 +32,13 @@ extern float globalMaxFrequency;
 
 extern float globalMinPeriodLength;
 
-#ifndef WP_WPFUNC_CPP
+#define WP_EXT_INLINE inline
+
+/*#ifndef WP_WPFUNC_CPP
 #define WP_EXT_INLINE extern inline
 #else
 #define WP_EXT_INLINE
-#endif
+#endif*/
 
 WP_EXT_INLINE float sampleRateToMaxFreq(float sampleRate) {
 	return (sampleRate - 100.0f)/2.0f;
@@ -48,19 +47,19 @@ WP_EXT_INLINE float sampleRateToMaxFreq(float sampleRate) {
 WP_EXT_INLINE void setGlobalSampleRate(float sampleRate) {
 	globalSampleRate = sampleRate;
 	globalMaxFrequency =
-		sampleRateToMaxFreq(globalSampleRate) <? sampleRateToMaxFreq(WP_STD_SAMPLE_RATE);
+		std::min(sampleRateToMaxFreq(globalSampleRate), sampleRateToMaxFreq(WP_STD_SAMPLE_RATE));
 	globalMinPeriodLength = 1.0f / globalMaxFrequency;
 }
 
 WP_EXT_INLINE float hzToUnsigned(float hz) {
-	return hz * globalMinPeriodLength <? 1.0f;
+	return hz * std::min(globalMinPeriodLength, 1.0f);
 }
 
 WP_EXT_INLINE float unsignedToHz(float usigned) {
-	return usigned * globalMaxFrequency >? 1.0f;
+	return std::max(usigned * globalMaxFrequency, 1.0f);
 }
 
-WP_EXT_INLINE float clamp01(float x) {return 0.0f >? (x <? 1.0f);}
+WP_EXT_INLINE float clamp01(float x) {return std::max(0.0f, std::min(x, 1.0f));}
 
 WP_EXT_INLINE int modulo(int n, int d) {return ((n % d) + d) % d;}
 

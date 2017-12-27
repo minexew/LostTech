@@ -44,8 +44,8 @@ DEALINGS IN THE SOFTWARE.
 #define F_LAG_T(v) (std::pow(std::log10(9.0f*(v) + 1.0f), 0.4f))
 #define W_LAG_T(v) F_LAG_T(v)
 #define BOOL_T(v) ((v) > 0.5f)
-#define U_MOD_TYPE_T(v) ((ModulationTypeU) (0.999f*((v)*kNModTypesU)))
-#define F_MOD_TYPE_T(v) ((ModulationTypeF) (0.999f*((v)*kNModTypesF)))
+#define U_MOD_TYPE_T(v) ((ModulationTypeU) (unsigned int) (0.999f*((v)*kNModTypesU)))
+#define F_MOD_TYPE_T(v) ((ModulationTypeF) (unsigned int) (0.999f*((v)*kNModTypesF)))
 #define A_OFFSET_T(v) (2.0f*((v)-0.5f))
 #define A_GAIN_T(v) (((v) > 0.5f) \
                      ? ((((v) > 0.9999f)) ? 5000.0f : 1.0f / (2.0f*(1.0f - (v)))) \
@@ -58,8 +58,9 @@ DEALINGS IN THE SOFTWARE.
                      : 2.0f*(v))
 #define OVER_T(v) (1 + (int) (15.0f*(v)))
 #define WINDOW_T(v) ((int) (250.0f*(v)))
-#define S_MOD_TYPE_T(v) ((ModulationTypeS) (0.999f*((v)*kNModTypesS)))
+#define S_MOD_TYPE_T(v) ((ModulationTypeS) (unsigned int) (0.999f*((v)*kNModTypesS)))
 
+#define M_LN2 0.69314718055994530942
 
 // Macro for standard processing method.
 #define PROC_METHOD(ioStatements) \
@@ -441,7 +442,7 @@ WavePlug::WavePlug(audioMasterCallback audioMaster) :
 	setNumInputs(2); // Stereo in.
 	setNumOutputs(2); // Stereo out.
 	setUniqueID(CCONST('C','Q','C','Q')); // Identify.
-	canMono(); // Mono-to-stereo operation possible.
+	//canMono(); // Mono-to-stereo operation possible.
 	canProcessReplacing(); // Supports both accumulating and replacing output.
 	std::strcpy(programName, "Default");	// Default program name.
 	
@@ -529,11 +530,11 @@ bool WavePlug::getVendorString(char *text) {
 	return true;
 }
 
-long WavePlug::getVendorVersion() {return WP_VENDOR_VERSION;}
+VstInt32 WavePlug::getVendorVersion() {return WP_VENDOR_VERSION;}
 
 VstPlugCategory WavePlug::getPlugCategory() {return kPlugCategEffect;}
 
-long WavePlug::canDo(char *text) {
+VstInt32 WavePlug::canDo(char *text) {
 	if (!std::strcmp(text, "sendVstEvents") ||
 	    !std::strcmp(text, "sendVstMidiEvent") ||
 	    !std::strcmp(text, "sendVstTimeInfo"))
@@ -556,7 +557,7 @@ long WavePlug::canDo(char *text) {
 	return 0l; // Dunno.
 }
 
-void WavePlug::setProgram(long program) {} // No program changes allowed.
+void WavePlug::setProgram(VstInt32 program) {} // No program changes allowed.
 
 void WavePlug::setProgramName(char *name) { // SYNCHRONIZED
 	EnterCriticalSection(&myCriticalSection);
@@ -574,7 +575,7 @@ void WavePlug::getProgramName(char *name) { // SYNCHRONIZED
 	LeaveCriticalSection(&myCriticalSection);
 }
 
-bool WavePlug::getProgramNameIndexed(long category, long index, char *text) { // SYNCHRONIZED
+bool WavePlug::getProgramNameIndexed(VstInt32 category, VstInt32 index, char *text) { // SYNCHRONIZED
 	bool success = false;
 	
 	EnterCriticalSection(&myCriticalSection);
@@ -589,7 +590,7 @@ bool WavePlug::getProgramNameIndexed(long category, long index, char *text) { //
 	return success;
 }
 
-void WavePlug::setParameter(long index, float value) { // SYNCHRONIZED
+void WavePlug::setParameter(VstInt32 index, float value) { // SYNCHRONIZED
 	// Get appropriate help texts for modulator functions.
 	const char *const*texts = NULL;
 	
@@ -630,7 +631,7 @@ void WavePlug::setParameter(long index, float value) { // SYNCHRONIZED
 	LeaveCriticalSection(&myCriticalSection);
 }
 
-float WavePlug::getParameter(long index) { // SYNCHRONIZED
+float WavePlug::getParameter(VstInt32 index) { // SYNCHRONIZED
 	float value = NAN;
 	
 	EnterCriticalSection(&myCriticalSection);
@@ -642,7 +643,7 @@ float WavePlug::getParameter(long index) { // SYNCHRONIZED
 	return value;
 }
 
-void WavePlug::getParameterName(long index, char *label) {
+void WavePlug::getParameterName(VstInt32 index, char *label) {
 	if (index < kNumMonoParams) {
 		if (index == kPlugVersion)
 			std::strcpy(label, "Version");
@@ -657,7 +658,7 @@ void WavePlug::getParameterName(long index, char *label) {
 	}
 }
 
-void WavePlug::getParameterDisplay(long index, char *text) {
+void WavePlug::getParameterDisplay(VstInt32 index, char *text) {
 	float value = getParameter(index);
 	
 	if (index < kNumMonoParams) {
@@ -673,7 +674,7 @@ void WavePlug::getParameterDisplay(long index, char *text) {
 	}
 }
 
-void WavePlug::getParameterLabel(long index, char *label) {
+void WavePlug::getParameterLabel(VstInt32 index, char *label) {
 	if (index < kNumMonoParams)
 		std::strcpy(label, "");
 	else {
@@ -718,10 +719,10 @@ void WavePlug::resume() { // SYNCHRONIZED
 	sharedData.resetFlag = true;
 	sharedData.setProcessHandlersFlag = true;
 	
-	sharedData.input0Connected = isInputConnected(0l);
-	sharedData.input1Connected = isInputConnected(1l);
-	sharedData.output0Connected = isOutputConnected(0l);
-	sharedData.output1Connected = isOutputConnected(1l);
+    sharedData.input0Connected = true; // isInputConnected(0l);
+	sharedData.input1Connected = true; // isInputConnected(1l);
+    sharedData.output0Connected = true; // isOutputConnected(0l);
+	sharedData.output1Connected = true; // isOutputConnected(1l);
 	
 	if (!(sharedData.input0Connected | sharedData.input1Connected)) {
 		sharedData.operational = false;
@@ -743,14 +744,14 @@ void WavePlug::resume() { // SYNCHRONIZED
 		throw std::runtime_error("WavePlug::resume - No outputs connected.");
 }
 
-void WavePlug::process(float **inputs, float **outputs, long sampleFrames) {
+/*void WavePlug::process(float **inputs, float **outputs, long sampleFrames) {
 	doThreadSynchronizedDataExchange();
 	
 	(this->*procHandler)(
 		inputs[in0Index], inputs[in1Index], outputs[out0Index], outputs[out1Index], sampleFrames);
-}
+}*/
 
-void WavePlug::processReplacing(float **inputs, float **outputs, long sampleFrames) {
+void WavePlug::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames) {
 	doThreadSynchronizedDataExchange();
 	
 	(this->*procRHandler)(

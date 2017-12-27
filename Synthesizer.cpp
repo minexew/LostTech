@@ -72,7 +72,7 @@ void Synthesizer::reset() {
 	if (windowSize > 0) {
 		// NOTE: If windowSize isn't 0 then it must be at least 2 to allow the smoothing algorithm
 		// to peek two samples ahead.
-		windowSize = windowSize >? 2;
+		windowSize = std::max(windowSize, 2);
 		
 		bufferManager->deleteFloatBuffer(fadeBuffer);
 		

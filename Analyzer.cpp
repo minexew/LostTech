@@ -61,7 +61,7 @@ void Analyzer::reset(float a, float fHz) {
 		return;
 	
 	aWeightModifier = WP_STD_SAMPLE_RATE / globalSampleRate;
-	maxWaveSize = (int) (globalSampleRate/fMin + 0.5f) + 1 <? waveBufferSize;
+	maxWaveSize = std::min((int) (globalSampleRate/fMin + 0.5f) + 1, waveBufferSize);
 	
 	amplitude = a;
 	frequency = hzToUnsigned(fHz);
@@ -121,12 +121,12 @@ void Analyzer::setADecWeight(float weight) {
 }
 
 void Analyzer::setFMin(float hz) {
-	fMin = hz <? globalMaxFrequency;
-	maxWaveSize = (int) (globalSampleRate/fMin + 0.5f) + 1 <? waveBufferSize;
+	fMin = std::min(hz, globalMaxFrequency);
+	maxWaveSize = std::min((int) (globalSampleRate/fMin + 0.5f) + 1, waveBufferSize);
 }
 
 void Analyzer::setFMax(float hz) {
-	fMax = hz <? globalMaxFrequency;
+	fMax = std::min(hz, globalMaxFrequency);
 	minWaveSize = (int) (globalSampleRate/fMax + 0.5f) + 1;
 }
 
@@ -142,7 +142,7 @@ void Analyzer::addSample(float sample) {
 	
 	// NOTE: We make amplitude lower-bounded to stay out of cycle-sapping denormal territory.
 	amplitude =
-		1.0e-8f >? amplitude + ((absample > amplitude) ? aIncWNew : aDecWNew) * (absample - amplitude);
+		std::max(1.0e-8f, amplitude + ((absample > amplitude) ? aIncWNew : aDecWNew) * (absample - amplitude));
 	
 	// Skip frequency and waveform updates while the input signal is near-silent.
 	if (trigDisabled) {
@@ -192,7 +192,7 @@ void Analyzer::updateFreqAndWave(float sample, float absample) {
 	
 	// Whichever is lower of the current input amplitude and the maximum signal level
 	// in the waveform is chosen as the maximum "normal" signal level.
-	float maxNormal = (amplitude <? maxSample) + 1.0e-8f;
+	float maxNormal = std::min(amplitude, maxSample) + 1.0e-8f;
 	
 	// How much higher than the maximum normal level does the waveform go?
 	float diffMaxSampleMaxNormal = maxSample - maxNormal + 2.0e-8f;
@@ -230,7 +230,7 @@ void Analyzer::updateFreqAndWave(float sample, float absample) {
 		for (int i = 0; i < newWaveSize; i++) {
 			float value = waveFunc.getValue(x);
 			value += wWNew*(newWave[i] - value);
-			newWave[i] = copysignf(1.0e-8f >? std::abs(value), value);
+			newWave[i] = copysignf(std::max(1.0e-8f, std::abs(value)), value);
 			x += d;
 		}
 	}

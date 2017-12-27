@@ -227,7 +227,7 @@ lastTouchedParamIndex(-1), showHelp(false), paramTouched(false) {
 
 
 // Inherited virtual public methods.
-long WavePlugEditor::open(void *ptr) {
+bool WavePlugEditor::open(void *ptr) {
 	AEffGUIEditor::open(ptr);
 	
 	CRect size;
@@ -426,14 +426,14 @@ void WavePlugEditor::idle() {
 	}
 }
 
-void WavePlugEditor::setParameter(long index, float value) {
+void WavePlugEditor::setParameter(VstInt32 index, float value) {
 	if (!frame)
 		return;
 	
 	if (index == kBufferSize) {
 		bufrMenu->setValue(7.0f*value + 0.5f);
 		
-		postUpdate();
+		//postUpdate();
 	}
 	else if (index >= kNumMonoParams) {
 		int stereoIndex = index - kNumMonoParams;
@@ -441,7 +441,7 @@ void WavePlugEditor::setParameter(long index, float value) {
 		controls[stereoIndex]->setValue(value);
 		displays[stereoIndex]->setValue(value);
 		
-		postUpdate();
+		//postUpdate();
 	}
 }
 
